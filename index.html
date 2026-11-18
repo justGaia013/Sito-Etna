@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L’Etna – Mount Etna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#fff3e6; --muted:#e9c9b0; --ember:#ff4a1c; --glow:#ffb066; --panel:rgba(20,6,10,.72);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  font-family:'Source Sans 3',system-ui,sans-serif;color:var(--ink);line-height:1.65;
+  background:#1a0614;
+}
+/* ---------- sfondo ---------- */
+#sky{position:fixed;inset:0;z-index:-4;
+  background:linear-gradient(180deg,#12041f 0%,#3a0f3a 30%,#8f2a3c 55%,#e2602f 78%,#ffb457 100%);}
+#sun{position:fixed;left:50%;bottom:6vh;width:70vmax;height:70vmax;transform:translate(-50%,50%);z-index:-3;
+  background:radial-gradient(circle,#fff2b8 0,#ffc062 12%,rgba(255,120,50,.55) 30%,rgba(255,80,40,0) 62%);}
+#meteors{position:fixed;inset:0;z-index:-2;width:100%;height:100%}
+#etna{position:fixed;left:0;bottom:0;width:100%;height:46vh;z-index:-1}
+/* ---------- struttura ---------- */
+header{position:sticky;top:0;z-index:5;background:rgba(18,4,16,.82);backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(255,120,60,.35)}
+nav{max-width:980px;margin:auto;display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem 1.6rem;padding:.7rem 1rem}
+nav a{color:var(--ink);text-decoration:none;text-align:center;padding:.25rem .2rem;border-bottom:2px solid transparent;
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.1rem;line-height:1.2}
+nav a small{display:block;font-family:'Source Sans 3',sans-serif;font-weight:400;font-size:.8rem;color:var(--muted)}
+nav a:hover,nav a:focus-visible{border-color:var(--glow);outline:none}
+nav a.on{border-color:var(--ember)}
+main{max-width:980px;margin:0 auto;padding:1.5rem 1rem 52vh}
+section{display:none}
+section.on{display:block}
+.hero{text-align:center;padding:12vh 0 5vh}
+h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(4rem,16vw,9rem);line-height:.95;
+  letter-spacing:.02em;text-shadow:0 0 40px rgba(255,90,30,.75),0 4px 0 #6b1408}
+.hero .en{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,6vw,2.8rem);color:var(--glow);font-style:italic}
+.panel{background:var(--panel);border:1px solid rgba(255,120,60,.3);border-radius:10px;padding:1.4rem 1.5rem;margin:1.4rem 0;
+  box-shadow:0 10px 40px rgba(0,0,0,.35)}
+h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,7vw,3rem);line-height:1.05;margin:.5rem 0 1.1rem}
+h2 span{display:block;font-size:.6em;font-style:italic;color:var(--glow);font-weight:500}
+h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:.4rem;color:var(--glow)}
+p{max-width:72ch;margin-bottom:.8rem}
+p.en{color:var(--muted);font-style:italic;padding-left:.9rem;border-left:2px solid var(--ember);margin-bottom:1.3rem}
+ul{margin:.2rem 0 1rem 1.2rem}
+li{margin-bottom:.3rem}
+li i{color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin:1rem 0}
+.facts div{background:rgba(255,90,30,.12);border:1px solid rgba(255,120,60,.35);border-radius:8px;padding:.7rem .9rem}
+.facts b{display:block;font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--glow);line-height:1.1}
+.facts span{font-size:.92rem}
+.facts em{display:block;color:var(--muted);font-size:.85rem}
+figure{margin:1.2rem 0}
+figure img{width:100%;max-height:420px;object-fit:cover;border-radius:8px;display:block;border:1px solid rgba(255,120,60,.35)}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:.4rem}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+footer{font-size:.8rem;color:var(--muted);text-align:center;margin-top:2rem}
+a{color:var(--glow)}
+:focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="sky"></div><div id="sun"></div>
+<canvas id="meteors" aria-hidden="true"></canvas>
+<svg id="etna" viewBox="0 0 1440 460" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="mt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a1018"/><stop offset=".5" stop-color="#1c0711"/><stop offset="1" stop-color="#0b0309"/>
+    </linearGradient>
+    <radialGradient id="cr" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffd27a"/><stop offset=".35" stop-color="#ff5a1f" stop-opacity=".85"/><stop offset="1" stop-color="#ff3010" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path d="M0 460V380L170 352 340 372 520 318 640 262 700 198 730 150 756 118 772 108 790 112 812 138 842 178 880 214 940 262 1040 318 1180 352 1320 368 1440 360V460Z" fill="url(#mt)"/>
+  <path d="M0 460V425L200 408 420 428 640 400 820 420 1020 396 1240 424 1440 410V460Z" fill="#070207"/>
+  <ellipse cx="778" cy="108" rx="60" ry="30" fill="url(#cr)"/>
+  <path d="M772 112 760 168 776 214 764 270" stroke="#ff6a2a" stroke-width="3" fill="none" opacity=".75" stroke-linecap="round"/>
+  <path d="M790 116 806 164 796 212" stroke="#ff8a3a" stroke-width="2" fill="none" opacity=".6" stroke-linecap="round"/>
+</svg>
+
+<header><nav aria-label="Menu">
+  <a href="#home" data-s="home">Home<small>Home</small></a>
+  <a href="#storia" data-s="storia">Storia dell’Etna<small>Story of the Etna</small></a>
+  <a href="#tipo" data-s="tipo">Tipo di vulcano<small>Type of volcano</small></a>
+</nav></header>
+
+<main>
+<!-- ================= HOME ================= -->
+<section id="home">
+  <div class="hero">
+    <h1>L’Etna</h1>
+    <div class="en">Mount Etna</div>
+  </div>
+
+  <div class="panel">
+    <p>L’Etna è il vulcano più alto e attivo d’Europa. Sorge nella Sicilia orientale, tra le province di Catania, Messina ed Enna, e domina il paesaggio con i suoi circa 3.300 metri di altezza (la quota cambia a ogni eruzione). I siciliani la chiamano affettuosamente “’a Muntagna”, la Montagna.</p>
+    <p class="en">Mount Etna is the tallest and one of the most active volcanoes in Europe. It stands on the east coast of Sicily, between the provinces of Catania, Messina and Enna, and dominates the landscape at roughly 3,300 metres (the height changes with every eruption). Sicilians fondly call it “’a Muntagna”, the Mountain.</p>
+
+    <div class="facts">
+      <div><b>~3.300 m</b><span>Altezza (variabile)</span><em>Height (it changes)</em></div>
+      <div><b>~1.200 km²</b><span>Superficie della base</span><em>Base area</em></div>
+      <div><b>~140 km</b><span>Circonferenza alla base</span><em>Base circumference</em></div>
+      <div><b>2013</b><span>Patrimonio UNESCO</span><em>UNESCO World Heritage</em></div>
+    </div>
+
+    <figure>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Etna_April_2011_Eruption_-_Creative_Commons_by_gnuckx.jpg?width=1000" alt="Eruzione dell’Etna di notte, aprile 2011 / Etna erupting at night, April 2011" loading="lazy" onerror="this.closest('figure').remove()">
+      <figcaption>Eruzione dell’Etna, aprile 2011 · <i>Etna eruption, April 2011</i> (Wikimedia Commons, gnuckx, CC)</figcaption>
+    </figure>
+
+    <h3>Perché è speciale · <i>Why it is special</i></h3>
+    <ul>
+      <li>Fertile terreno vulcanico: vigneti, pistacchi, agrumi e frutteti sulle pendici. <i>Fertile volcanic soil: vineyards, pistachios, citrus and orchards on its slopes.</i></li>
+      <li>Parco dell’Etna, istituito nel 1987, con boschi, grotte laviche e crateri. <i>Etna Park, created in 1987, with forests, lava caves and craters.</i></li>
+      <li>Nella mitologia greca era la fucina di Efesto e la prigione del gigante Tifone. <i>In Greek myth it was the forge of Hephaestus and the prison of the giant Typhon.</i></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= STORIA ================= -->
+<section id="storia">
+  <div class="panel">
+    <h2>Storia dell’Etna<span>Story of the Etna</span></h2>
+
+    <h3>Come si è formata · <i>How it formed</i></h3>
+    <p>L’Etna nasce circa 500.000 anni fa, quando le prime eruzioni sottomarine si aprirono nel golfo che allora si trovava dove oggi sorge Catania. Il vulcano è cresciuto a poco a poco, strato dopo strato, fino a emergere dal mare. Nel tempo l’attività si è spostata e sono nati più apparati vulcanici sovrapposti, tra cui il grande “Ellittico” (circa 35.000–15.000 anni fa), il cui collasso ha lasciato ampie depressioni. Il cono attuale, detto “Mongibello”, si è formato sopra i resti dei vecchi edifici.</p>
+    <p class="en">Etna began around 500,000 years ago, when the first submarine eruptions opened in the gulf that lay where Catania stands today. The volcano grew slowly, layer by layer, until it rose above the sea. Over time activity shifted and several overlapping volcanic edifices were built, including the large “Ellittico” (about 35,000–15,000 years ago), whose collapse left wide depressions. The present cone, called “Mongibello”, grew on top of the older structures.</p>
+
+    <h3>Origine geologica · <i>Geological origin</i></h3>
+    <p>L’Etna si trova in una zona tettonica complessa, dove la placca africana converge verso quella euroasiatica. Qui faglie profonde permettono al magma basaltico di risalire dal mantello. Gli scienziati discutono ancora il modello esatto, ma il risultato è un vulcano con magma molto abbondante e un’attività quasi continua.</p>
+    <p class="en">Etna sits in a complex tectonic setting where the African plate converges on the Eurasian plate. Deep faults let basaltic magma rise from the mantle. Scientists still debate the exact model, but the result is a volcano with abundant magma and almost continuous activity.</p>
+
+    <figure>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Etnas_1669_eruption.jpg?width=900" alt="Disegno dell’eruzione del 1669 / Drawing of the 1669 eruption" loading="lazy" onerror="this.closest('figure').remove()">
+      <figcaption>Disegno dell’eruzione del 1669 · <i>Drawing of the 1669 eruption</i> (Wikimedia Commons, public domain)</figcaption>
+    </figure>
+
+    <h3>Eruzioni storiche · <i>Historic eruptions</i></h3>
+    <ul>
+      <li><b>122 a.C.</b> – Pesante eruzione che danneggiò Catania. <i>A heavy eruption that damaged Catania.</i></li>
+      <li><b>1669</b> – La più distruttiva: la lava raggiunse Catania e arrivò fino al mare. <i>The most destructive: lava reached Catania and flowed into the sea.</i></li>
+      <li><b>1928</b> – Il paese di Mascali venne distrutto dalla lava. <i>The town of Mascali was destroyed by lava.</i></li>
+      <li><b>1991–1993</b> – Lunga eruzione; a Zafferana Etnea la lava fu deviata con barriere e interventi. <i>A long eruption; at Zafferana Etnea the lava was diverted by barriers and engineering work.</i></li>
+      <li><b>2018</b> – Eruzione laterale con centinaia di scosse sismiche. <i>A flank eruption with hundreds of earthquakes.</i></li>
+      <li><b>2020–2021</b> – Serie di parossismi con alte fontane di lava e cenere. <i>A series of paroxysms with tall lava fountains and ash.</i></li>
+    </ul>
+
+    <figure>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Etna_eruption_seen_from_the_International_Space_Station.jpg?width=900" alt="Eruzione dell’Etna vista dalla Stazione Spaziale Internazionale / Etna erupting, seen from the ISS" loading="lazy" onerror="this.closest('figure').remove()">
+      <figcaption>L’eruzione del 2002 vista dalla Stazione Spaziale · <i>The 2002 eruption seen from the Space Station</i> (NASA, public domain)</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= TIPO ================= -->
+<section id="tipo">
+  <div class="panel">
+    <h2>Tipo di vulcano<span>Type of volcano</span></h2>
+
+    <p>L’Etna è uno <b>stratovulcano</b> (vulcano composito): un cono alto costruito da molti strati di lava, scorie e cenere che si sono accumulati con le eruzioni. È un vulcano <b>attivo</b>, non spento e non dormiente, ed è tra i più attivi del mondo: erutta quasi ogni anno e spesso mostra attività anche sulla cima.</p>
+    <p class="en">Etna is a <b>stratovolcano</b> (composite volcano): a tall cone built from many layers of lava, scoria and ash piled up by eruptions. It is an <b>active</b> volcano, neither extinct nor dormant, and one of the most active in the world: it erupts almost every year and often shows activity at the summit.</p>
+
+    <div class="facts">
+      <div><b>Attivo</b><span>Stato del vulcano</span><em>Active</em></div>
+      <div><b>Basaltico</b><span>Tipo di magma</span><em>Basaltic magma</em></div>
+      <div><b>4</b><span>Crateri sommitali</span><em>Summit craters</em></div>
+    </div>
+
+    <h3>Cosa erutta · <i>What it erupts</i></h3>
+    <ul>
+      <li>Lava basaltica abbastanza fluida, che scorre lungo i fianchi anche per chilometri. <i>Fairly fluid basaltic lava that flows down the slopes, sometimes for kilometres.</i></li>
+      <li>Attività stromboliana e fontane di lava, con lapilli e bombe vulcaniche. <i>Strombolian activity and lava fountains, with lapilli and volcanic bombs.</i></li>
+      <li>Cenere, che può cadere sulle città vicine e a volte fa chiudere l’aeroporto di Catania. <i>Ash, which can fall on nearby towns and sometimes closes Catania airport.</i></li>
+      <li>Gas vulcanici, come vapore acqueo e anidride carbonica, anche senza eruzione. <i>Volcanic gases, such as water vapour and carbon dioxide, even without an eruption.</i></li>
+    </ul>
+
+    <h3>Crateri e fianchi · <i>Craters and flanks</i></h3>
+    <p>In cima ci sono quattro crateri principali: Voragine, Bocca Nuova, Cratere di Nord-Est e Cratere di Sud-Est. Oltre alle eruzioni dalla cima, l’Etna ha eruzioni laterali, da fratture che si aprono sui fianchi, che possono essere più pericolose per i paesi. Il vulcano è sorvegliato 24 ore su 24 dall’INGV – Osservatorio Etneo.</p>
+    <p class="en">At the top there are four main craters: Voragine, Bocca Nuova, the North-East Crater and the South-East Crater. Besides summit eruptions, Etna has flank eruptions from fissures opening on its sides, which can be more dangerous for towns. The volcano is monitored around the clock by INGV – Osservatorio Etneo.</p>
+
+    <div class="duo">
+      <figure>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/04Sep2007_Etna_from_SE_Crater.jpg?width=800" alt="Eruzione dal cratere di Sud-Est, 2007 / Eruption from the South-East Crater, 2007" loading="lazy" onerror="this.closest('figure').remove()">
+        <figcaption>Cratere di Sud-Est, 2007 · <i>South-East Crater, 2007</i></figcaption>
+      </figure>
+      <figure>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ash_Plume_from_Mount_Etna.jpg?width=800" alt="Nube di cenere dall’Etna / Ash plume from Etna" loading="lazy" onerror="this.closest('figure').remove()">
+        <figcaption>Nube di cenere · <i>Ash plume</i></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<footer>Immagini / Images: Wikimedia Commons · NASA</footer>
+</main>
+
+<script>
+/* ---- navigazione a sezioni ---- */
+(function(){
+  var secs=['home','storia','tipo'];
+  function show(){
+    var h=(location.hash||'#home').slice(1); if(secs.indexOf(h)<0) h='home';
+    secs.forEach(function(s){
+      document.getElementById(s).classList.toggle('on',s===h);
+      document.querySelector('nav a[data-s="'+s+'"]').classList.toggle('on',s===h);
+    });
+    document.documentElement.lang = 'it';
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',show); show();
+})();
+
+/* ---- meteore rosse ---- */
+(function(){
+  var c=document.getElementById('meteors'),x=c.getContext('2d'),W,H,list=[];
+  var calm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){W=c.width=innerWidth;H=c.height=innerHeight}
+  size(); addEventListener('resize',size);
+  function make(initial){
+    var len=60+Math.random()*120, ang=Math.PI/2+0.35+Math.random()*0.15; // cadono in diagonale verso sinistra
+    return {x:Math.random()*(W+300),y:initial?Math.random()*H:-len,len:len,
+      v:3+Math.random()*5,a:ang,w:1+Math.random()*2.2,o:.45+Math.random()*.5};
+  }
+  var n=calm?10:Math.max(18,Math.min(40,Math.round(W/40)));
+  for(var i=0;i<n;i++) list.push(make(true));
+  function frame(){
+    x.clearRect(0,0,W,H);
+    list.forEach(function(m,i){
+      var dx=Math.cos(m.a)*m.len, dy=Math.sin(m.a)*m.len;
+      var g=x.createLinearGradient(m.x,m.y,m.x-dx,m.y-dy);
+      g.addColorStop(0,'rgba(255,230,190,'+m.o+')');
+      g.addColorStop(.25,'rgba(255,70,30,'+m.o+')');
+      g.addColorStop(1,'rgba(200,0,0,0)');
+      x.strokeStyle=g; x.lineWidth=m.w; x.lineCap='round';
+      x.beginPath(); x.moveTo(m.x,m.y); x.lineTo(m.x-dx,m.y-dy); x.stroke();
+      x.fillStyle='rgba(255,240,210,'+m.o+')'; x.beginPath(); x.arc(m.x,m.y,m.w*.9,0,6.3); x.fill();
+      if(!calm){ m.x+=Math.cos(m.a)*m.v; m.y+=Math.sin(m.a)*m.v; }
+      if(m.y-dy>H+20 || m.x<-200) list[i]=make(false);
+    });
+    if(!calm) requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
